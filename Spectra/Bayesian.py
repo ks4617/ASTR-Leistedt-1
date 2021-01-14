@@ -126,10 +126,13 @@ def objective_function1(W,X_mu_zeros,n1=0,n2=len(X_mu_zeros)):
 
         sign_M, logdet_M = slogdet(M)
 
+
         sig_inv_diag[sig_inv_diag==0.] = np.NaN
         logdet_sig = np.nansum(np.log(sig_inv_diag))
         l_n[i] = -0.5*X_mu_zeros.shape[1]*np.log(2*np.pi) - 0.5*(sign_M*logdet_M - logdet_sig) - 0.5*np.matmul(X_mu_zeros[i].T,np.matmul(C_inv,X_mu_zeros[i]))
         # ln = -0.5*X_mu_zeros.shape[1]*np.log(2*np.pi) - 0.5*(sign_M*logdet_M - logdet_sig) - 0.5*np.matmul(np.array([(X_mu_zeros[i])]),np.matmul(C_inv,(X_mu_zeros[i])))[0]
+        logdet_sig = np.nansum(np.log(spec_err1_nan[i]**(-2)))
+        l_n[i] = -np.shape(W)[0]*np.log(2*np.pi) - 0.5*(sign_M*logdet_M - logdet_sig) - 0.5*np.matmul(np.array([(X_mu_zeros[i])]),np.matmul(C_inv,(X_mu_zeros[i])))[0]
     
     return -sum(l_n)
 #%% Optimise for W by maximising ln
